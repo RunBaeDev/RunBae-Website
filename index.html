@@ -425,7 +425,7 @@
 <!-- HERO -->
 <header class="hero">
   <div class="logo-wrapper">
-    <img src="./shared_image__1_-removebg-preview.png" alt="RunBae Logo" class="logo-img"/>
+    <img src="./Images/RunBae_Log.png" alt="RunBae Logo" class="logo-img"/>
   </div>
   <p>🔥 Not just miles, but moments. A run that blends movement, connection, and that post-run glow we all chase. 🔥</p>
   <div class="features">
@@ -447,7 +447,7 @@
       <div class="section-slider">
         <div class="section-slides" id="slides1">
           <div class="section-slide">
-            <img src="https://images.unsplash.com/photo-1571008887538-b36bb32f4571?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Running Community">
+            <img src="./Images/sec_1/">
           </div>
           <div class="section-slide">
             <img src="https://images.unsplash.com/photo-1599058917765-a780eda07a3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1169&q=80" alt="Group Running">
@@ -599,11 +599,14 @@
       </div>
     </div>
 
-    <div class="cta">
-      <p class="note">🎟 Limited spots – first come, first run</p>
-      <button onclick="window.location.href='register.html'">Register Now! 🚀</button>
-    </div>
+<div class="cta">
+  <p class="note">🎟 Limited spots – first come, first run</p>
+  <p id="status-msg"></p>
+  <div id="registration-form" style="display:none;">
+    <button id="register-btn">Register Now! 🚀</button>
   </div>
+</div>
+
 
   <script>
     // Slider functionality for each section
@@ -678,6 +681,25 @@
     setInterval(() => nextSlide(0), 4000);
     setInterval(() => nextSlide(1), 4500);
     setInterval(() => nextSlide(2), 5000);
+
+
+    // Flag for allowing registration 
+  const registrationOpen = true; // change manually when location decided
+
+  const statusMsg = document.getElementById("status-msg");
+  const regForm = document.getElementById("registration-form");
+  const regBtn = document.getElementById("register-btn");
+
+  if (registrationOpen) {
+    regForm.style.display = "block"; 
+    // Redirect when button is clicked
+    regBtn.addEventListener("click", () => {
+      window.location.href = "register.html"; 
+    });
+  } else {
+    statusMsg.textContent = "📍 Location not decided yet. Registration will open soon!";
+    regForm.style.display = "none"; 
+  }
   </script>
 </body>
 </html>
