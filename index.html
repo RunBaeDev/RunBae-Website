@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RunBae #14 – Flow Into Sunday</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Baloo+2:wght@600;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #111;
+      --spotlight: #FF6A00;
+      --txt: #EEE;
+      --muted: #888;
+      --card: #1d1f23;
+      --section1: #2a3444;
+      --section2: #3a2c44;
+      --section3: #2c443a;
+    }
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body {
+      font-family: 'Montserrat', sans-serif; 
+      background: var(--bg); 
+      color: var(--txt);
+      overflow-x: hidden;
+      -webkit-text-size-adjust: 100%; /* Prevent font scaling in landscape */
+    }
+
+    /* HERO */
+    .hero {
+      text-align: center;
+      padding: 60px 20px 40px;
+      background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), 
+                  url('https://images.unsplash.com/photo-1594882645126-14020914d58d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1185&q=80');
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    .hero h1 {
+      font-size: 3.5rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      margin-bottom: 15px;
+      background: linear-gradient(45deg, #ff5722, #f44336, #ff9800, #ffeb3b);
+      background-size: 400% 400%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientShift 3s ease-in-out infinite;
+    }
+    @keyframes gradientShift {
+      0% {background-position:0% 50%;}
+      50% {background-position:100% 50%;}
+      100% {background-position:0% 50%;}
+    }
+    .hero p {
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 15px auto 25px;
+      color: #f2f2f2;
+      line-height: 1.6;
+    }
+    .features {
+      margin: 20px auto 30px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .feature {
+      background: rgba(255,255,255,0.1);
+      border: 2px solid #ff4d00;
+      border-radius: 8px;
+      padding: 10px 15px;
+      font-weight: 600;
+      color: #fff;
+      transition: 0.3s;
+      font-size: 0.9rem;
+    }
+    .feature:hover {background:#ff4d00;color:#000;}
+
+    /* IMAGE SECTIONS */
+    .image-sections {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      padding: 30px 15px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .image-section {
+      flex: 1;
+      min-width: 300px;
+      max-width: 100%;
+      background: #1a1a1a;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    }
+    .section-header {
+      padding: 12px;
+      text-align: center;
+      background: #2a2a2a;
+      border-bottom: 2px solid var(--spotlight);
+    }
+    .section-header h3 {
+      margin: 0;
+      font-size: 1.2rem;
+    }
+    .section-slider {
+      height: 200px;
+      position: relative;
+      overflow: hidden;
+      touch-action: pan-y;
+    }
+    .section-slides {
+      display: flex;
+      width: 300%;
+      height: 100%;
+      transition: transform 0.4s ease-in-out;
+    }
+    .section-slide {
+      width: 33.333%;
+      height: 100%;
+      flex-shrink: 0;
+    }
+    .section-slide img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .section-dots {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 8px;
+    }
+    .section-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.5);
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .section-dot.active {
+      background: var(--spotlight);
+    }
+
+    /* CONTENT SECTION */
+    .content {
+      max-width: 800px;
+      margin: 30px auto;
+      padding: 15px;
+      font-family: 'Baloo 2', sans-serif;
+    }
+
+    .content h2 {
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 1.8rem;
+    }
+
+    .section-spacing {
+      margin: 40px 0;
+    }
+
+    .runner-highlight {
+      background: linear-gradient(135deg, rgba(255, 87, 34, 0.05) 0%, rgba(244, 67, 54, 0.05) 50%, rgba(255, 193, 7, 0.05) 100%);
+      border: 1px solid rgba(255, 87, 34, 0.2);
+      padding: 1.5rem;
+      border-radius: 0.75rem;
+      background-color: rgb(255 255 255 / 0.05);
+      margin: 30px 0;
+    }
+    
+    .runner-highlight h3 {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: white;
+      margin-bottom: 1.2rem;
+      text-align: center;
+    }
+    
+    .runner-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.2rem;
+    }
+    
+    .runner-column {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    
+    .runner-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: white;
+    }
+    
+    .runner-item .dot {
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    
+    .runner-item .dot.orange {
+      background-color: #ffa726;
+      animation: pulse 2s infinite;
+    }
+    
+    .runner-item .dot.red {
+      background-color: #ef5350;
+      animation: pulse 2s infinite;
+    }
+    
+    .runner-item .dot.yellow {
+      background-color: #ffee58;
+      animation: pulse 2s infinite;
+    }
+    
+    .runner-item .dot.green {
+      background-color: #66bb6a;
+      animation: pulse 2s infinite;
+    }
+    
+    .runner-item .dot.blue {
+      background-color: #42a5f5;
+      animation: pulse 2s infinite;
+    }
+    
+    .runner-item .dot.pink {
+      background-color: #ec407a;
+      animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.5; }
+      100% { opacity: 1; }
+    }
+    
+    .runner-item span {
+      font-size: 1rem;
+    }
+    
+    /* Schedule Section */
+    .schedule-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.8rem;
+    }
+    
+    .schedule-item {
+      display: grid;
+      grid-template-columns: 120px 1fr;
+      gap: 0.8rem;
+      padding: 0.8rem;
+      background: rgba(255,255,255,0.1);
+      border-radius: 0.6rem;
+    }
+    
+    .schedule-time {
+      font-weight: bold;
+      color: var(--spotlight);
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 12px;
+      margin: 15px 0;
+    }
+    
+    .info-label {
+      font-weight: bold;
+      color: var(--spotlight);
+    }
+
+    .rise-text {
+      text-align: center;
+      margin-top: 20px;
+      font-style: italic;
+      color: #ffa726;
+      font-size: 1.1rem;
+      font-weight: 600;
+    }
+
+    .cta {
+      text-align: center;
+      margin-top: 40px;
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(255, 87, 34, 0.05) 0%, rgba(244, 67, 54, 0.05) 50%, rgba(255, 193, 7, 0.05) 100%);
+      border: 1px solid rgba(255, 87, 34, 0.2);
+      border-radius: 0.75rem;
+      background-color: rgb(255 255 255 / 0.05);
+    }
+
+    .cta .note {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      color: var(--spotlight);
+      font-weight: bold;
+    }
+
+    .cta button {
+      background: #ff5722;
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 8px;
+      font-size: 1.1rem;
+      cursor: pointer;
+      transition: all 0.3s;
+      font-family: 'Baloo 2', sans-serif;
+      min-height: 50px; /* Better touch target */
+    }
+
+    .cta button:hover {
+      background: #e64a19;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(230, 74, 25, 0.4);
+    }
+
+    /* Mobile-specific improvements */
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 2.8rem;
+      }
+      .hero p {
+        font-size: 1rem;
+      }
+      .feature {
+        width: 100%;
+        max-width: 280px;
+      }
+      .image-section {
+        min-width: 100%;
+      }
+      .runner-highlight {
+        padding: 1.2rem;
+      }
+      .runner-highlight h3 {
+        font-size: 1.3rem;
+      }
+      .schedule-item {
+        grid-template-columns: 1fr;
+        text-align: center;
+      }
+      .schedule-time {
+        margin-bottom: 5px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .hero {
+        padding: 40px 15px 30px;
+      }
+      .hero h1 {
+        font-size: 2.2rem;
+      }
+      .content h2 {
+        font-size: 1.5rem;
+      }
+      .runner-item span {
+        font-size: 0.9rem;
+      }
+      .cta button {
+        width: 100%;
+        padding: 12px 20px;
+      }
+      .section-slider {
+        height: 180px;
+      }
+    }
+
+    /* Very small devices */
+    @media (max-width: 350px) {
+      .hero h1 {
+        font-size: 1.8rem;
+      }
+      .feature {
+        font-size: 0.8rem;
+        padding: 8px 12px;
+      }
+      .section-header h3 {
+        font-size: 1.1rem;
+      }
+    }
+
+    /* Prevent horizontal scrolling */
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+    }
+
+    /* Logo styling */
+    .logo-wrapper {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-img {
+      width: 220px;
+      height: auto;
+      transition: all 0.3s ease;
+      filter: drop-shadow(0 0 5px rgba(255, 106, 0, 0.5));
+    }
+    
+    .logo-img:hover {
+      filter: drop-shadow(0 0 15px rgba(255, 106, 0, 0.8));
+      transform: scale(1.05);
+    }
+	
+  </style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="logo-wrapper">
+    <img src="./images/New folder/shared_image__1_-removebg-preview.png" alt="RunBae Logo" class="logo-img"/>
+  </div>
+  <p>🔥 Not just miles, but moments. A run that blends movement, connection, and that post-run glow we all chase. 🔥</p>
+  <div class="features">
+    <div class="feature">👥 Community Squad</div>
+    <div class="feature">🏆 3km & 5km Runs</div>
+    <div class="feature">⚡ All Fitness Levels</div>
+  </div>
+</header>
+
+
+    
+  <!-- IMAGE SECTIONS -->
+  <div class="image-sections">
+    <!-- Section 1 -->
+    <div class="image-section">
+      <div class="section-header">
+        <h3>🏃‍♂️ Running Community</h3>
+      </div>
+      <div class="section-slider">
+        <div class="section-slides" id="slides1">
+          <div class="section-slide">
+            <img src="https://images.unsplash.com/photo-1571008887538-b36bb32f4571?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Running Community">
+          </div>
+          <div class="section-slide">
+            <img src="https://images.unsplash.com/photo-1599058917765-a780eda07a3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1169&q=80" alt="Group Running">
+          </div>
+          <div class="section-slide">
+            <img src="https://images.unsplash.com/photo-1594882645126-14020914d58d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1185&q=80" alt="Running Together">
+          </div>
+        </div>
+        <div class="section-dots" id="dots1">
+          <div class="section-dot active"></div>
+          <div class="section-dot"></div>
+          <div class="section-dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2 -->
+    <div class="image-section">
+      <div class="section-header">
+        <h3>🌅 Morning Runs</h3>
+      </div>
+      <div class="section-slider">
+        <div class="section-slides" id="slides2">
+          <div class="section-slide">
+            <img src="./Pics/SEC_1/Support Agent Icon2.jpg" alt="Morning Run">
+          </div>
+          <div class="section-slide">
+            <img src="https://images.unsplash.com/photo-1596363500725-ee5ff7341de7?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Sunrise Run">
+          </div>
+          <div class="section-slide">
+            <img src="https://images.unsplash.com/photo-1544830333-9f6a2baf90c3?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1169&q=80" alt="Running at Dawn">
+          </div>
+        </div>
+        <div class="section-dots" id="dots2">
+          <div class="section-dot active"></div>
+          <div class="section-dot"></div>
+          <div class="section-dot"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 3 -->
+    <div class="image-section">
+      <div class="section-header">
+        <h3>🎉 Post-Run Vibes</h3>
+      </div>
+      <div class="section-slider">
+        <div class="section-slides" id="slides3">
+          <div class="section-slide">
+            <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Post-Run Gathering">
+          </div>
+          <div class="section-slide">
+            <img src="https://images.unsplash.com/photo-1511877410722-671c1f7e2e37?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Community Hangout">
+          </div>
+          <div class="section-slide">
+            <img src="https://images.unsplash.com/photo-1460661419208-fecf06a26cd2?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1170&q=80" alt="Celebration">
+          </div>
+        </div>
+        <div class="section-dots" id="dots3">
+          <div class="section-dot active"></div>
+          <div class="section-dot"></div>
+          <div class="section-dot"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </header>
+
+  <!-- CONTENT SECTION -->
+  <div class="content">
+    <h2>RunBae #14 – Flow Into Sunday</h2>
+    <p style="text-align:center; margin-bottom: 30px;">🔥 Not just miles, but moments. A run that blends movement, connection, and that post-run glow we all chase. 🔥</p>
+
+    <div class="runner-highlight">
+      <h3>📅 When | ⏰ Time | 📍 Where</h3>
+      <div class="info-grid">
+        <div class="info-label">Date:</div>
+        <div>Sunday, August 31st</div>
+        
+        <div class="info-label">Time:</div>
+        <div>6:30 AM</div>
+        
+        <div class="info-label">Location:</div>
+        <div>Matra</div>
+      </div>
+      <p class="rise-text">Rise with the sun, run with the crew</p>
+    </div>
+
+    <!-- What's Happening Section -->
+    <div class="runner-highlight">
+      <h3>✨ What's Happening @ #14</h3>
+      <div class="runner-grid">
+        <div class="runner-column">
+          <div class="runner-item">
+            <div class="dot orange"></div>
+            <span>🏃‍♀️ 3K is back on popular demand</span>
+          </div>
+          <div class="runner-item">
+            <div class="dot red"></div>
+            <span>🏃‍♂️ 5K Strong — one loop, one flow, one crew</span>
+          </div>
+          <div class="runner-item">
+            <div class="dot yellow"></div>
+            <span>⚡ Energizer Warm-up — fun drills</span>
+          </div>
+        </div>
+        <div class="runner-column">
+          <div class="runner-item">
+            <div class="dot green"></div>
+            <span>👥 Run Together — pace up or chill</span>
+          </div>
+          <div class="runner-item">
+            <div class="dot blue"></div>
+            <span>☕ Recharge & Chill — post-run hangout</span>
+          </div>
+          <div class="runner-item">
+            <div class="dot pink"></div>
+            <span>🎁 Surprise Element — you'll know when you're there 😉</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Schedule Section -->
+    <div class="runner-highlight">
+      <h3>📌 Schedule — Let's Glow Up</h3>
+      <div class="schedule-grid">
+        <div class="schedule-item">
+          <div class="schedule-time">6:30 – 6:45 AM</div>
+          <div>🤝 Check-in & Meet the Crew</div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">6:45 – 7:00 AM</div>
+          <div>🔥 Warm-up — get loose, get hyped</div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">7:00 – 7:45 AM</div>
+          <div>🏃 Run Time — 3K or 5K, your way</div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">7:45 – 8:00 AM</div>
+          <div>🧘 Cooldown — you earned it</div>
+        </div>
+        <div class="schedule-item">
+          <div class="schedule-time">8:00 AM onwards</div>
+          <div>✨ Matra Vibes — Coffee, games & more</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="cta">
+      <p class="note">🎟 Limited spots – first come, first run</p>
+      <button onclick="window.location.href='register.html'">Register Now! 🚀</button>
+    </div>
+  </div>
+
+  <script>
+    // Slider functionality for each section
+    const sliders = [
+      { slides: 'slides1', dots: 'dots1', index: 0 },
+      { slides: 'slides2', dots: 'dots2', index: 0 },
+      { slides: 'slides3', dots: 'dots3', index: 0 }
+    ];
+    
+    // Initialize all sliders
+    sliders.forEach((slider, sliderIndex) => {
+      const slides = document.getElementById(slider.slides);
+      const dots = document.getElementById(slider.dots).querySelectorAll('.section-dot');
+      
+      // Set up dot click events
+      dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => {
+          goToSlide(sliderIndex, index);
+        });
+      });
+
+      // Add touch events for mobile
+      let startX, movedX;
+      const sliderElement = slides.parentElement;
+      
+      sliderElement.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+      }, { passive: true });
+      
+      sliderElement.addEventListener('touchmove', (e) => {
+        movedX = e.touches[0].clientX;
+      }, { passive: true });
+      
+      sliderElement.addEventListener('touchend', () => {
+        if (startX - movedX > 50) {
+          // Swipe left - next slide
+          nextSlide(sliderIndex);
+        } else if (movedX - startX > 50) {
+          // Swipe right - previous slide
+          prevSlide(sliderIndex);
+        }
+      });
+    });
+    
+    function goToSlide(sliderIndex, slideIndex) {
+      const slider = sliders[sliderIndex];
+      slider.index = slideIndex;
+      
+      const slides = document.getElementById(`slides${sliderIndex + 1}`);
+      const dots = document.getElementById(`dots${sliderIndex + 1}`).querySelectorAll('.section-dot');
+      
+      slides.style.transform = `translateX(-${slideIndex * 33.333}%)`;
+      
+      dots.forEach((dot, idx) => {
+        dot.classList.toggle('active', idx === slideIndex);
+      });
+    }
+    
+    function nextSlide(sliderIndex) {
+      const slider = sliders[sliderIndex];
+      const nextIndex = (slider.index + 1) % 3;
+      goToSlide(sliderIndex, nextIndex);
+    }
+    
+    function prevSlide(sliderIndex) {
+      const slider = sliders[sliderIndex];
+      const prevIndex = (slider.index - 1 + 3) % 3;
+      goToSlide(sliderIndex, prevIndex);
+    }
+    
+    // Auto slide for each section
+    setInterval(() => nextSlide(0), 4000);
+    setInterval(() => nextSlide(1), 4500);
+    setInterval(() => nextSlide(2), 5000);
+  </script>
+</body>
+</html>

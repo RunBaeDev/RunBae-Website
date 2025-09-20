@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Run Registration</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary-color: rgb(239 68 68);
+      --dark-bg: linear-gradient(180deg, #0c0f17, #1a1f2c);
+      --form-bg: linear-gradient(180deg, #2b1a1a, #3a2727);
+      --consent-bg: linear-gradient(180deg, #4d1f1f, #642a2a);
+    }
+    
+    * {
+      font-family: "Fredoka", sans-serif;
+      font-weight: 700;
+    }
+    
+    body {
+      margin: 0;
+      background: var(--dark-bg);
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .form-card {
+      background: var(--form-bg);
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 8px 16px rgba(0,0,0,0.4);
+    }
+
+    /* Glowing title */
+    .form-card h2 {
+      margin-top: 0;
+      text-align: center;
+      font-size: 24px;
+      color: #fff;
+      text-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px var(--primary-color);
+      margin-bottom: 10px;
+    }
+
+    .form-card p.subtitle {
+      text-align: center;
+      font-size: 14px;
+      color: #ccc;
+      margin-bottom: 20px;
+    }
+
+    /* Labels */
+    label {
+      font-size: 14px;
+      margin-bottom: 6px;
+      display: block;
+    }
+
+    /* Inputs, selects, textarea */
+    input, select, textarea {
+      width: 100%;
+      padding: 7px;
+      margin-bottom: 16px;
+      border: 1px solid #444;
+      border-radius: 8px;
+      background: #1e1e1e;
+      color: #fff;
+      font-size: 14px;
+      outline: none;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 10px var(--primary-color);
+    }
+
+    /* Full Name + Phone in one row */
+    .form-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .form-row .field {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    /* Consent box */
+    .consent-box {
+      background: var(--consent-bg);
+      padding: 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 20px;
+    }
+
+    /* Custom checkbox */
+    .consent-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      cursor: pointer;
+      margin-bottom: 8px;
+    }
+    
+    .consent-check input[type="checkbox"] {
+      appearance: none;
+      -webkit-appearance: none;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      border: 2px solid #fff;
+      border-radius: 4px;
+      cursor: pointer;
+      position: relative;
+      margin: 0;
+    }
+
+    .consent-check input[type="checkbox"]:checked {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    .consent-check input[type="checkbox"]:checked::after {
+      content: "✔";
+      color: white;
+      font-size: 12px;
+      position: absolute;
+      top: -2px;
+      left: 2px;
+    }
+
+    .consent-text {
+      font-size: 12px;
+      line-height: 1.4;
+      color: #ddd;
+      margin-top: 8px;
+    }
+
+    /* Submit button */
+    .submit-btn {
+      width: 100%;
+      background-color: #e64a19;
+      border: none;
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 16px;
+      color: white;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+      
+    }
+
+    .submit-btn:hover {
+  background: #e64a19;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(230, 74, 25, 0.6),
+              0 0 10px #e64a19,
+              0 0 20px #e64a19;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 500px) {
+      .form-row {
+        flex-direction: column;
+        gap: 0;
+      }
+      
+      .form-row .field {
+        min-width: 100%;
+      }
+
+
+    }
+
+
+    /* Back button */
+.back-btn {
+  display: inline-block;
+  margin-bottom: 16px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: #333;
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+}
+
+.back-btn:hover {
+  background: #e64a19;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(230, 74, 25, 0.6),
+              0 0 10px #e64a19,
+              0 0 20px #e64a19;
+}
+
+  </style>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("runForm");
+
+  form.addEventListener("submit", function(e){
+    e.preventDefault(); // stop normal form submission
+
+    const data = Object.fromEntries(new FormData(form));
+
+    fetch("YOUR_WEB_APP_URL_HERE", {
+      method: "POST",
+      body: JSON.stringify(data),
+      headers: { "Content-Type": "application/json" }
+    })
+    .then(res => res.text())
+    .then(msg => {
+      alert("✅ Registration successful!");
+      form.reset();
+    })
+    .catch(err => alert("❌ Something went wrong, try again."));
+  });
+});
+</script>
+
+
+</head>
+<body>
+  <div class="container">
+        <a href="index.html" class="back-btn">← Back to Event Details</a>
+    <div class="form-card">
+      <h2>Join the Run!</h2>
+      <p class="subtitle">Register for RunBae #1! – Flows into Sunday - Limited spots available</p>
+
+<form id="runForm">
+        <!-- Full Name & Phone in same row -->
+        <div class="form-row">
+          <div class="field">
+            <label>Full Name *</label>
+            <input type="text"  name="fullName" placeholder="Enter your full name" required>
+          </div>
+          <div class="field">
+            <label>Phone Number *</label>
+            <input type="tel"name="phone" placeholder="Enter your phone number" required>
+          </div>
+        </div>
+
+<label>Which run are you signing up for? *</label>
+<select name="run" required>
+  <option disabled selected value="">Select run distance</option>
+  <option>3km – Easy Flow 🌀</option>
+  <option>5km – Strong Pace 💪</option>
+</select>
+
+<label>Have you attended any previous run? *</label>
+<select name="attendance" required>
+  <option disabled selected value="">Select attendance history</option>
+  <option>Yes, I've been part of the vibe</option>
+  <option>No, This will be my first run</option>
+</select>
+
+<div class="form-row">
+  <div class="field">
+    <label>Gender *</label>
+    <select name="gender" required>
+      <option disabled selected value="">Select gender</option>
+      <option>Male</option>
+      <option>Female</option>
+      <option>Non-binary</option>
+      <option>Prefer not to say</option>
+    </select>
+  </div>
+  <div class="field">
+    <label>Age *</label>
+    <input type="number" name="age" placeholder="13" min="13" required>
+  </div>
+</div>
+
+
+        <label>Do you have any medical conditions we should know about?</label>
+        <textarea placeholder="Please describe any medical conditions, allergies, or concerns..."></textarea>
+
+        <!-- Consent -->
+        <div class="consent-box">
+          <label class="consent-check">
+            <input type="checkbox" required>
+            <span>Consent & Waiver Agreement *</span>
+          </label>
+          <p class="consent-text">
+            I understand that participating in running activities involves inherent risks and dangers of accidents, injury, and even death. I voluntarily assume all risks associated with participation and agree to hold harmless RunWay Running Club, its organizers, volunteers, and sponsors from any claims, demands, or causes of action arising from my participation. I certify that I am physically fit and have not been advised otherwise by a qualified medical professional.
+          </p>
+        </div>
+
+        <button type="submit" class="submit-btn">Join the Squad</button>
+      </form>
+    </div>
+  </div>
+</body>
+</html>
