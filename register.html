@@ -5,13 +5,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Run Registration</title>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <style>
     :root {
       --primary-color: rgb(239 68 68);
       --dark-bg: linear-gradient(180deg, #0c0f17, #1a1f2c);
       --form-bg: linear-gradient(180deg, #2b1a1a, #3a2727);
       --consent-bg: linear-gradient(180deg, #4d1f1f, #642a2a);
+      --gold: #FFD700;
+      --silver: #C0C0C0;
+      --success-glow: 0 0 15px #FFD700, 0 0 30px #FF9900, 0 0 45px #FF5500;
     }
+
+
     
     * {
       font-family: "Fredoka", sans-serif;
@@ -27,11 +33,14 @@
       align-items: flex-start;
       min-height: 100vh;
       padding: 20px;
+      overflow-x: hidden;
     }
 
     .container {
       width: 100%;
       max-width: 480px;
+      position: relative;
+      z-index: 1;
     }
 
     .form-card {
@@ -169,12 +178,52 @@
     }
 
     .submit-btn:hover {
-  background: #e64a19;
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(230, 74, 25, 0.6),
-              0 0 10px #e64a19,
-              0 0 20px #e64a19;
+      background: #e64a19;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(230, 74, 25, 0.6),
+                0 0 10px #e64a19,
+                0 0 20px #e64a19;
     }
+    .loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(43, 26, 26, 0.9);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+  border-radius: 14px;
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.loading-overlay.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.loading-spinner {
+  text-align: center;
+  color: #fff;
+}
+
+/* New CSS for the GIF */
+.spinner-gif {
+  width: 100px; /* Adjust the width as needed for your GIF */
+  height: auto; /* Maintain aspect ratio */
+  display: block; /* Remove extra space below the image */
+  margin: 0 auto; /* Center the GIF */
+}
+
+.loading-text {
+  margin-top: 10px;
+  font-size: 1rem;
+  color: #ccc;
+}
 
     /* Responsive adjustments */
     @media (max-width: 500px) {
@@ -186,130 +235,448 @@
       .form-row .field {
         min-width: 100%;
       }
-
-
     }
 
-
     /* Back button */
-.back-btn {
-  display: inline-block;
-  margin-bottom: 16px;
-  padding: 10px 18px;
-  border-radius: 12px;
-  background: #333;
-  color: #fff;
-  text-decoration: none;
-  font-size: 14px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-}
+    .back-btn {
+      display: inline-block;
+      margin-bottom: 16px;
+      padding: 10px 18px;
+      border-radius: 12px;
+      background: #333;
+      color: #fff;
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
 
-.back-btn:hover {
-  background: #e64a19;
-  transform: translateY(-3px);
-  box-shadow: 0 5px 15px rgba(230, 74, 25, 0.6),
-              0 0 10px #e64a19,
-              0 0 20px #e64a19;
-}
+    .back-btn:hover {
+      background: #e64a19;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(230, 74, 25, 0.6),
+                0 0 10px #e64a19,
+                0 0 20px #e64a19;
+    }
 
+    /* Fireworks container - positioned to overlap form */
+    .fireworks-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 1000;
+    }
+
+    /* Celebration popup - positioned above fireworks */
+    .celebration-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      background: rgba(0, 0, 0, 0.95);
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      z-index: 1000;
+      box-shadow: var(--success-glow);
+      border: 3px solid #FF9900;
+      width: 80%;
+      max-width: 300px;
+      opacity: 0;
+      transition: all 0.5s ease-out;
+      cursor: pointer;
+    }
+
+    .celebration-popup.show {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    .celebration-popup h2 {
+      color: var(--gold);
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+      text-shadow: 0 0 10px var(--gold), 0 0 20px var(--gold);
+      animation: pulse 2s infinite;
+    }
+
+    .celebration-popup p {
+      color: white;
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
+
+    .celebration-popup .icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: var(--gold);
+      text-shadow: 0 0 10px var(--gold);
+      animation: spin 3s linear infinite;
+    }
+
+    .celebration-popup .confetti {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      background-color: var(--gold);
+      opacity: 0.8;
+      border-radius: 0;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .winner-badge {
+      width: 60px;
+      height: 60px;
+      margin: 0 auto 10px;
+      background: radial-gradient(circle, var(--gold) 40%, var(--silver) 100%);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 3px solid var(--gold);
+      box-shadow: 0 0 15px var(--gold);
+      animation: pulse 2s infinite;
+    }
+
+    .winner-badge i {
+      font-size: 1.8rem;
+      color: #000;
+    }
+
+    .runner-number {
+      font-size: 2rem;
+      color: var(--gold);
+      text-shadow: 0 0 15px var(--gold), 0 0 25px #FF9900;
+      margin: 5px 0;
+      animation: pulse 1s infinite;
+    }
+    
+    .tap-message {
+      position: fixed;
+      bottom: 20px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      color: white;
+      font-size: 1rem;
+      text-shadow: 0 0 10px rgba(0,0,0,0.5);
+      z-index: 1001;
+      animation: fadeInOut 2s infinite;
+    }
+    
+    @keyframes fadeInOut {
+      0% { opacity: 0.7; }
+      50% { opacity: 1; }
+      100% { opacity: 0.7; }
+    }
+
+    /* Mobile-specific adjustments */
+    @media (max-width: 768px) {
+      .celebration-popup {
+        width: 85%;
+        padding: 15px;
+      }
+      
+      .celebration-popup h2 {
+        font-size: 1.3rem;
+      }
+      
+      .runner-number {
+        font-size: 1.8rem;
+      }
+      
+      .winner-badge {
+        width: 50px;
+        height: 50px;
+      }
+      
+      .winner-badge i {
+        font-size: 1.5rem;
+      }
+      
+      body {
+        padding: 15px;
+      }
+      
+      .form-card {
+        padding: 18px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .celebration-popup {
+        width: 90%;
+        padding: 12px;
+      }
+      
+      .celebration-popup h2 {
+        font-size: 1.2rem;
+      }
+      
+      .runner-number {
+        font-size: 1.6rem;
+      }
+      
+      .winner-badge {
+        width: 45px;
+        height: 45px;
+      }
+      
+      .winner-badge i {
+        font-size: 1.3rem;
+      }
+      
+      .celebration-popup p {
+        font-size: 0.8rem;
+      }
+      
+    }
   </style>
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const form = document.getElementById("runForm");
-
-  form.addEventListener("submit", function(e){
-    e.preventDefault(); // stop normal form submission
-
-    const data = Object.fromEntries(new FormData(form));
-
-    fetch("YOUR_WEB_APP_URL_HERE", {
-      method: "POST",
-      body: JSON.stringify(data),
-      headers: { "Content-Type": "application/json" }
-    })
-    .then(res => res.text())
-    .then(msg => {
-      alert("✅ Registration successful!");
-      form.reset();
-    })
-    .catch(err => alert("❌ Something went wrong, try again."));
-  });
-});
-</script>
-
-
+  <!-- Fireworks script -->
+  <script>
+    /**
+     * name: fireworks-js
+     * version: 2.10.8
+     * author: Vitalij Ryndin (https://crashmax.ru)
+     * homepage: https://fireworks.js.org
+     * license MIT
+     */
+    (function(c,u){typeof exports=="object"&&typeof module<"u"?u(exports):typeof define=="function"&&define.amd?define(["exports"],u):(c=typeof globalThis<"u"?globalThis:c||self,u(c.Fireworks={}))})(this,function(c){"use strict";function u(e){return Math.abs(Math.floor(e))}function p(e,t){return Math.random()*(t-e)+e}function o(e,t){return Math.floor(p(e,t+1))}function g(e,t,i,s){const n=Math.pow;return Math.sqrt(n(e-i,2)+n(t-s,2))}function f(e,t,i=1){if(e>360||e<0)throw new Error(`Expected hue 0-360 range, got \`${e}\``);if(t>100||t<0)throw new Error(`Expected lightness 0-100 range, got \`${t}\``);if(i>1||i<0)throw new Error(`Expected alpha 0-1 range, got \`${i}\``);return`hsla(${e}, 100%, ${t}%, ${i})`}const v=e=>{if(typeof e=="object"&&e!==null){if(typeof Object.getPrototypeOf=="function"){const t=Object.getPrototypeOf(e);return t===Object.prototype||t===null}return Object.prototype.toString.call(e)==="[object Object]"}return!1},b=["__proto__","constructor","prototype"],w=(...e)=>e.reduce((t,i)=>(Object.keys(i).forEach(s=>{b.includes(s)||(Array.isArray(t[s])&&Array.isArray(i[s])?t[s]=i[s]:v(t[s])&&v(i[s])?t[s]=w(t[s],i[s]):t[s]=i[s])}),t),{});function S(e,t){let i;return(...s)=>{i&&clearTimeout(i),i=setTimeout(()=>e(...s),t)}}class O{x;y;ctx;hue;friction;gravity;flickering;lineWidth;explosionLength;angle;speed;brightness;coordinates=[];decay;alpha=1;constructor({x:t,y:i,ctx:s,hue:n,decay:h,gravity:a,friction:r,brightness:l,flickering:d,lineWidth:x,explosionLength:m}){for(this.x=t,this.y=i,this.ctx=s,this.hue=n,this.gravity=a,this.friction=r,this.flickering=d,this.lineWidth=x,this.explosionLength=m,this.angle=p(0,Math.PI*2),this.speed=o(1,10),this.brightness=o(l.min,l.max),this.decay=p(h.min,h.max);this.explosionLength--;)this.coordinates.push([t,i])}update(t){this.coordinates.pop(),this.coordinates.unshift([this.x,this.y]),this.speed*=this.friction,this.x+=Math.cos(this.angle)*this.speed,this.y+=Math.sin(this.angle)*this.speed+this.gravity,this.alpha-=this.decay,this.alpha<=this.decay&&t()}draw(){const t=this.coordinates.length-1;this.ctx.beginPath(),this.ctx.lineWidth=this.lineWidth,this.ctx.fillStyle=f(this.hue,this.brightness,this.alpha),this.ctx.moveTo(this.coordinates[t][0],this.coordinates[t][1]),this.ctx.lineTo(this.x,this.y),this.ctx.strokeStyle=f(this.hue,this.flickering?p(0,this.brightness):this.brightness,this.alpha),this.ctx.stroke()}}class E{constructor(t,i){this.options=t,this.canvas=i,this.pointerDown=this.pointerDown.bind(this),this.pointerUp=this.pointerUp.bind(this),this.pointerMove=this.pointerMove.bind(this)}active=!1;x;y;get mouseOptions(){return this.options.mouse}mount(){this.canvas.addEventListener("pointerdown",this.pointerDown),this.canvas.addEventListener("pointerup",this.pointerUp),this.canvas.addEventListener("pointermove",this.pointerMove)}unmount(){this.canvas.removeEventListener("pointerdown",this.pointerDown),this.canvas.removeEventListener("pointerup",this.pointerUp),this.canvas.removeEventListener("pointermove",this.pointerMove)}usePointer(t,i){const{click:s,move:n}=this.mouseOptions;(s||n)&&(this.x=t.pageX-this.canvas.offsetLeft,this.y=t.pageY-this.canvas.offsetTop,this.active=i)}pointerDown(t){this.usePointer(t,this.mouseOptions.click)}pointerUp(t){this.usePointer(t,!1)}pointerMove(t){this.usePointer(t,this.active)}}class M{hue;rocketsPoint;opacity;acceleration;friction;gravity;particles;explosion;mouse;boundaries;sound;delay;brightness;decay;flickering;intensity;traceLength;traceSpeed;lineWidth;lineStyle;autoresize;constructor(){this.autoresize=!0,this.lineStyle="round",this.flickering=50,this.traceLength=3,this.traceSpeed=10,this.intensity=30,this.explosion=5,this.gravity=1.5,this.opacity=.5,this.particles=50,this.friction=.95,this.acceleration=1.05,this.hue={min:0,max:360},this.rocketsPoint={min:50,max:50},this.lineWidth={explosion:{min:1,max:3},trace:{min:1,max:2}},this.mouse={click:!1,move:!1,max:1},this.delay={min:30,max:60},this.brightness={min:50,max:80},this.decay={min:.015,max:.03},this.sound={enabled:!1,files:["explosion0.mp3","explosion1.mp3","explosion2.mp3"],volume:{min:4,max:8}},this.boundaries={debug:!1,height:0,width:0,x:50,y:50}}update(t){Object.assign(this,w(this,t))}}class z{constructor(t,i){this.options=t,this.render=i}tick=0;rafId=0;fps=60;tolerance=.1;now;mount(){this.now=performance.now();const t=1e3/this.fps,i=s=>{this.rafId=requestAnimationFrame(i);const n=s-this.now;n>=t-this.tolerance&&(this.render(),this.now=s-n%t,this.tick+=n*(this.options.intensity*Math.PI)/1e3)};this.rafId=requestAnimationFrame(i)}unmount(){cancelAnimationFrame(this.rafId)}}class L{constructor(t,i,s){this.options=t,this.updateSize=i,this.container=s}resizer;mount(){if(!this.resizer){const t=S(()=>this.updateSize(),100);this.resizer=new ResizeObserver(t)}this.options.autoresize&&this.resizer.observe(this.container)}unmount(){this.resizer&&this.resizer.unobserve(this.container)}}class T{constructor(t){this.options=t,this.init()}buffers=[];audioContext;onInit=!1;get isEnabled(){return this.options.sound.enabled}get soundOptions(){return this.options.sound}init(){!this.onInit&&this.isEnabled&&(this.onInit=!0,this.audioContext=new(window.AudioContext||window.webkitAudioContext),this.loadSounds())}async loadSounds(){for(const t of this.soundOptions.files){const i=await(await fetch(t)).arrayBuffer();this.audioContext.decodeAudioData(i).then(s=>{this.buffers.push(s)}).catch(s=>{throw s})}}play(){if(this.isEnabled&&this.buffers.length){const t=this.audioContext.createBufferSource(),i=this.buffers[o(0,this.buffers.length-1)],s=this.audioContext.createGain();t.buffer=i,s.gain.value=p(this.soundOptions.volume.min/100,this.soundOptions.volume.max/100),s.connect(this.audioContext.destination),t.connect(s),t.start(0)}else this.init()}}class C{x;y;sx;sy;dx;dy;ctx;hue;speed;acceleration;traceLength;totalDistance;angle;brightness;coordinates=[];currentDistance=0;constructor({x:t,y:i,dx:s,dy:n,ctx:h,hue:a,speed:r,traceLength:l,acceleration:d}){for(this.x=t,this.y=i,this.sx=t,this.sy=i,this.dx=s,this.dy=n,this.ctx=h,this.hue=a,this.speed=r,this.traceLength=l,this.acceleration=d,this.totalDistance=g(t,i,s,n),this.angle=Math.atan2(n-i,s-t),this.brightness=o(50,70);this.traceLength--;)this.coordinates.push([t,i])}update(t){this.coordinates.pop(),this.coordinates.unshift([this.x,this.y]),this.speed*=this.acceleration;const i=Math.cos(this.angle)*this.speed,s=Math.sin(this.angle)*this.speed;this.currentDistance=g(this.sx,this.sy,this.x+i,this.y+s),this.currentDistance>=this.totalDistance?t(this.dx,this.dy,this.hue):(this.x+=i,this.y+=s)}draw(){const t=this.coordinates.length-1;this.ctx.beginPath(),this.ctx.moveTo(this.coordinates[t][0],this.coordinates[t][1]),this.ctx.lineTo(this.x,this.y),this.ctx.strokeStyle=f(this.hue,this.brightness),this.ctx.stroke()}}class y{target;container;canvas;ctx;width;height;traces=[];explosions=[];waitStopRaf;running=!1;opts;sound;resize;mouse;raf;constructor(t,i={}){this.target=t,this.container=t,this.opts=new M,this.createCanvas(this.target),this.updateOptions(i),this.sound=new T(this.opts),this.resize=new L(this.opts,this.updateSize.bind(this),this.container),this.mouse=new E(this.opts,this.canvas),this.raf=new z(this.opts,this.render.bind(this))}get isRunning(){return this.running}get version(){return"2.10.8"}get currentOptions(){return this.opts}start(){this.running||(this.canvas.isConnected||this.createCanvas(this.target),this.running=!0,this.resize.mount(),this.mouse.mount(),this.raf.mount())}stop(t=!1){this.running&&(this.running=!1,this.resize.unmount(),this.mouse.unmount(),this.raf.unmount(),this.clear(),t&&this.canvas.remove())}async waitStop(t){if(this.running)return new Promise(i=>{this.waitStopRaf=()=>{this.waitStopRaf&&(requestAnimationFrame(this.waitStopRaf),!this.traces.length&&!this.explosions.length&&(this.waitStopRaf=null,this.stop(t),i()))},this.waitStopRaf()})}pause(){this.running=!this.running,this.running?this.raf.mount():this.raf.unmount()}clear(){this.ctx&&(this.traces=[],this.explosions=[],this.ctx.clearRect(0,0,this.width,this.height))}launch(t=1){for(let i=0;i<t;i++)this.createTrace();this.waitStopRaf||(this.start(),this.waitStop())}updateOptions(t){this.opts.update(t)}updateSize({width:t=this.container.clientWidth,height:i=this.container.clientHeight}={}){this.width=t,this.height=i,this.canvas.width=t,this.canvas.height=i,this.updateBoundaries({...this.opts.boundaries,width:t,height:i})}updateBoundaries(t){this.updateOptions({boundaries:t})}createCanvas(t){t instanceof HTMLCanvasElement?(t.isConnected||document.body.append(t),this.canvas=t):(this.canvas=document.createElement("canvas"),this.container.append(this.canvas)),this.ctx=this.canvas.getContext("2d"),this.updateSize()}render(){if(!this.ctx||!this.running)return;const{opacity:t,lineStyle:i,lineWidth:s}=this.opts;this.ctx.globalCompositeOperation="destination-out",this.ctx.fillStyle=`rgba(0, 0, 0, ${t})`,this.ctx.fillRect(0,0,this.width,this.height),this.ctx.globalCompositeOperation="lighter",this.ctx.lineCap=i,this.ctx.lineJoin="round",this.ctx.lineWidth=p(s.trace.min,s.trace.max),this.initTrace(),this.drawTrace(),this.drawExplosion()}createTrace(){const{hue:t,rocketsPoint:i,boundaries:s,traceLength:n,traceSpeed:h,acceleration:a,mouse:r}=this.opts;this.traces.push(new C({x:this.width*o(i.min,i.max)/100,y:this.height,dx:this.mouse.x&&r.move||this.mouse.active?this.mouse.x:o(s.x,s.width-s.x*2),dy:this.mouse.y&&r.move||this.mouse.active?this.mouse.y:o(s.y,s.height*.5),ctx:this.ctx,hue:o(t.min,t.max),speed:h,acceleration:a,traceLength:u(n)}))}initTrace(){if(this.waitStopRaf)return;const{delay:t,mouse:i}=this.opts;(this.raf.tick>o(t.min,t.max)||this.mouse.active&&i.max>this.traces.length)&&(this.createTrace(),this.raf.tick=0)}drawTrace(){let t=this.traces.length;for(;t--;)this.traces[t].draw(),this.traces[t].update((i,s,n)=>{this.initExplosion(i,s,n),this.sound.play(),this.traces.splice(t,1)})}initExplosion(t,i,s){const{particles:n,flickering:h,lineWidth:a,explosion:r,brightness:l,friction:d,gravity:x,decay:m}=this.opts;let P=u(n);for(;P--;)this.explosions.push(new O({x:t,y:i,ctx:this.ctx,hue:s,friction:d,gravity:x,flickering:o(0,100)<=h,lineWidth:p(a.explosion.min,a.explosion.max),explosionLength:u(r),brightness:l,decay:m}))}drawExplosion(){let t=this.explosions.length;for(;t--;)this.explosions[t].draw(),this.explosions[t].update(()=>{this.explosions.splice(t,1)})}}c.Fireworks=y,c.default=y,Object.defineProperties(c,{__esModule:{value:!0},[Symbol.toStringTag]:{value:"Module"}})});
+  </script>
 </head>
 <body>
+  <!-- Fireworks container -->
+  <div class="fireworks-container"></div>
+  
+  <!-- Enhanced Celebration popup -->
+  <div class="celebration-popup" id="celebrationPopup">
+    <div class="winner-badge">
+      <i class="fas fa-trophy"></i>
+    </div>
+    <h2>CONGRATULATIONS!</h2>
+    <p>You are our</p>
+    <div class="runner-number" id="runnerNumber">100</div>
+    <p>Runner!</p>
+  </div>
+  
+  <div class="tap-message" id="tapMessage" style="display: none;">
+    <i class="fas fa-hand-point-up"></i> Tap anywhere to continue
+  </div>
+
   <div class="container">
-        <a href="index.html" class="back-btn">← Back to Event Details</a>
+    <a href="index.html" class="back-btn">← Back to Event Details</a>
     <div class="form-card">
       <h2>Join the Run!</h2>
       <p class="subtitle">Register for RunBae #1! – Flows into Sunday - Limited spots available</p>
 
-<form id="runForm">
+      <form id="runForm">
         <!-- Full Name & Phone in same row -->
         <div class="form-row">
           <div class="field">
             <label>Full Name *</label>
-            <input type="text"  name="fullName" placeholder="Enter your full name" required>
+            <input type="text" name="fullName" placeholder="Enter your full name" required>
           </div>
           <div class="field">
             <label>Phone Number *</label>
-            <input type="tel"name="phone" placeholder="Enter your phone number" required>
+            <input type="tel" name="phone" placeholder="Enter your phone number" required>
           </div>
         </div>
 
-<label>Which run are you signing up for? *</label>
-<select name="run" required>
-  <option disabled selected value="">Select run distance</option>
-  <option>3km – Easy Flow 🌀</option>
-  <option>5km – Strong Pace 💪</option>
-</select>
+        <label>Which run are you signing up for? *</label>
+        <select name="run" required>
+          <option disabled selected value="">Select run distance</option>
+          <option>3km – Easy Flow 🌀</option>
+          <option>5km – Strong Pace 💪</option>
+        </select>
 
-<label>Have you attended any previous run? *</label>
-<select name="attendance" required>
-  <option disabled selected value="">Select attendance history</option>
-  <option>Yes, I've been part of the vibe</option>
-  <option>No, This will be my first run</option>
-</select>
+        <label>Have you attended any previous run? *</label>
+        <select name="attendance" required>
+          <option disabled selected value="">Select attendance history</option>
+          <option>Yes, I've been part of the vibe</option>
+          <option>No, This will be my first run</option>
+        </select>
 
-<div class="form-row">
-  <div class="field">
-    <label>Gender *</label>
-    <select name="gender" required>
-      <option disabled selected value="">Select gender</option>
-      <option>Male</option>
-      <option>Female</option>
-      <option>Non-binary</option>
-      <option>Prefer not to say</option>
-    </select>
-  </div>
-  <div class="field">
-    <label>Age *</label>
-    <input type="number" name="age" placeholder="13" min="13" required>
-  </div>
-</div>
-
+        <div class="form-row">
+          <div class="field">
+            <label>Gender *</label>
+            <select name="gender" required>
+              <option disabled selected value="">Select gender</option>
+              <option>Male</option>
+              <option>Female</option>
+              <option>Non-binary</option>
+              <option>Prefer not to say</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Age</label>
+            <input type="number" name="age" placeholder="Enter your age">
+          </div>
+        </div>
 
         <label>Do you have any medical conditions we should know about?</label>
-        <textarea placeholder="Please describe any medical conditions, allergies, or concerns..."></textarea>
+        <textarea name="medical" placeholder="Please describe any medical conditions, allergies, or concerns..."></textarea>
 
         <!-- Consent -->
         <div class="consent-box">
           <label class="consent-check">
-            <input type="checkbox" required>
+            <input type="checkbox" name="consent" required>
             <span>Consent & Waiver Agreement *</span>
           </label>
           <p class="consent-text">
             I understand that participating in running activities involves inherent risks and dangers of accidents, injury, and even death. I voluntarily assume all risks associated with participation and agree to hold harmless RunWay Running Club, its organizers, volunteers, and sponsors from any claims, demands, or causes of action arising from my participation. I certify that I am physically fit and have not been advised otherwise by a qualified medical professional.
           </p>
         </div>
+		<div class="loading-overlay" id="loadingOverlay">
+			  <div class="loading-spinner">
+				<img src="./New folder/Loading.gif" alt="Running animation" class="spinner-gif">
+				<div class="loading-text">Joining the squad...</div>
+			  </div>
+			</div>
 
         <button type="submit" class="submit-btn">Join the Squad</button>
       </form>
     </div>
   </div>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("runForm");
+      const celebrationPopup = document.getElementById("celebrationPopup");
+      const runnerNumberEl = document.getElementById("runnerNumber");
+      const tapMessage = document.getElementById("tapMessage");
+      
+      // Initialize enhanced fireworks
+      const fireworksContainer = document.querySelector('.fireworks-container');
+      const fireworks = new Fireworks.default(fireworksContainer, {
+        autoresize: true,
+        opacity: 0.3,
+        acceleration: 1.15,
+        friction: 0.97,
+        gravity: 1.0,
+        particles: 100,
+        traceLength: 4,
+        traceSpeed: 12,
+        explosion: 7,
+        intensity: 40,
+        flickering: 50,
+        lineStyle: 'round',
+        hue: {
+          min: 0,
+          max: 360
+        },
+        delay: {
+          min: 20,
+          max: 40
+        },
+        rocketsPoint: {
+          min: 20,
+          max: 80
+        },
+        lineWidth: {
+          explosion: {
+            min: 2,
+            max: 4
+          },
+          trace: {
+            min: 1,
+            max: 2
+          }
+        }
+      });
+
+      // Get runner number from localStorage or start at 100
+      let runnerNumber = localStorage.getItem('runnerNumber') || 100;
+      
+      // Create confetti effect
+      function createConfetti() {
+        const colors = ['#FFD700', '#FF0000', '#00FF00', '#0000FF', '#FFFFFF', '#FF00FF', '#00FFFF'];
+        for (let i = 0; i < 20; i++) {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.left = Math.random() * 100 + '%';
+          confetti.style.top = Math.random() * 100 + '%';
+          confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+          celebrationPopup.appendChild(confetti);
+        }
+      }
+      
+      // Function to redirect to form
+      function redirectToForm() {
+        fireworks.stop();
+        celebrationPopup.classList.remove('show');
+        tapMessage.style.display = 'none';
+        
+        // Clear the form
+        form.reset();
+        
+        // Remove any existing click event listener
+        document.removeEventListener('click', redirectToForm);
+      }
+
+// Delta Code: Update your existing script block
+
+document.getElementById("runForm").addEventListener("submit", async function(e) {
+  e.preventDefault();
+
+  const submitBtn = e.target.querySelector('.submit-btn');
+  const loadingOverlay = document.getElementById("loadingOverlay");
+
+  // Show loading state
+  submitBtn.disabled = true;
+  loadingOverlay.classList.add('visible');
+
+  // Use FormData for simple POST requests that don't trigger CORS preflight
+  const formData = new FormData(e.target);
+  const data = new URLSearchParams();
+  for (const [key, value] of formData.entries()) {
+    data.append(key, value);
+  }
+  
+  try {
+    // Send data to Google Sheets Web App
+			await fetch("https://script.google.com/macros/s/AKfycbySy46q9t5oNVAmlCdThwNBQtAwPdY311zEGgCmcI5d5DC3GMrn0SAedhGVCqQgnEpj/exec", {
+      method: "POST",
+      body: data,
+    });
+
+    // Handle success
+    celebrationPopup.classList.add('show');
+    createConfetti();
+    fireworks.start();
+    tapMessage.style.display = 'block';
+
+    runnerNumber++;
+    localStorage.setItem('runnerNumber', runnerNumber);
+    runnerNumberEl.textContent = runnerNumber;
+
+    document.addEventListener('click', redirectToForm);
+
+  } catch (err) {
+    alert("❌ Something went wrong, please try again!");
+  } finally {
+    // Hide loading state regardless of success or failure
+    submitBtn.disabled = false;
+    loadingOverlay.classList.remove('visible');
+  }
+});
+
+    });
+  </script>
 </body>
 </html>
