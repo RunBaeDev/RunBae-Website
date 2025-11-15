@@ -642,7 +642,7 @@ document.getElementById("runForm").addEventListener("submit", async function(e) 
   const loadingOverlay = document.getElementById("loadingOverlay");
 
   // Show loading state
-  submitBtn.disabled = true;
+  submitBtn.disabled = false;
   loadingOverlay.classList.add('visible');
 
   // Use FormData for simple POST requests that don't trigger CORS preflight
