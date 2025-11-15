@@ -604,7 +604,7 @@
       });
 
       // Get runner number from localStorage or start at 100
-      let runnerNumber = localStorage.getItem('runnerNumber') || 100;
+      let runnerNumber = localStorage.getItem('runnerNumber') || 0;
       
       // Create confetti effect
       function createConfetti() {
@@ -657,7 +657,7 @@ data.append("location", eventLocation);
   
   try {
     // Send data to Google Sheets Web App
-			await fetch("https://script.google.com/macros/s/AKfycbySy46q9t5oNVAmlCdThwNBQtAwPdY311zEGgCmcI5d5DC3GMrn0SAedhGVCqQgnEpj/exec", {
+	await fetch("https://script.google.com/macros/s/AKfycbxwP_m4TKAq9764Q4SY0HMtFtus3H7FFoaNb3DSAa-r3mAi_hHwuoA_DhiXf8gfBLUc/exec", {
       method: "POST",
       body: data,
     });
