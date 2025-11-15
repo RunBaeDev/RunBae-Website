@@ -538,7 +538,7 @@
             <span>Consent & Waiver Agreement *</span>
           </label>
           <p class="consent-text">
-            I understand that participating in running activities involves inherent risks and dangers of accidents, injury, and even death. I voluntarily assume all risks associated with participation and agree to hold harmless RunWay Running Club, its organizers, volunteers, and sponsors from any claims, demands, or causes of action arising from my participation. I certify that I am physically fit and have not been advised otherwise by a qualified medical professional.
+            I understand that participating in running activities involves inherent risks and dangers of accidents, injury, and even death. I voluntarily assume all risks associated with participation and agree to hold harmless RunBae Running Club, its organizers, volunteers, and sponsors from any claims, demands, or causes of action arising from my participation. I certify that I am physically fit and have not been advised otherwise by a qualified medical professional.
           </p>
         </div>
 		<div class="loading-overlay" id="loadingOverlay">
@@ -554,6 +554,10 @@
   </div>
 
   <script>
+	  // Get location from URL
+	const urlParams = new URLSearchParams(window.location.search);
+	const eventLocation = urlParams.get("location") || "";
+
     document.addEventListener("DOMContentLoaded", function () {
       const form = document.getElementById("runForm");
       const celebrationPopup = document.getElementById("celebrationPopup");
@@ -646,7 +650,10 @@ document.getElementById("runForm").addEventListener("submit", async function(e) 
   const data = new URLSearchParams();
   for (const [key, value] of formData.entries()) {
     data.append(key, value);
+	
   }
+data.append("location", eventLocation);
+
   
   try {
     // Send data to Google Sheets Web App

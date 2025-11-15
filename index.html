@@ -569,7 +569,7 @@
         <div>6:30 AM</div>
         
         <div class="info-label">Location:</div>
-        <div>Matra</div>
+        <div id="event-location">Matra</div>
       </div>
       <p class="rise-text">Rise with the sun, run with the crew</p>
     </div>
@@ -794,9 +794,11 @@ startAutoplay();
   if (registrationOpen) {
     regForm.style.display = "block"; 
     // Redirect when button is clicked
-    regBtn.addEventListener("click", () => {
-      window.location.href = "register.html"; 
-    });
+	regBtn.addEventListener("click", () => {
+		const locationValue = document.getElementById("event-location").innerText.trim();
+		window.location.href = "register.html?location=" + encodeURIComponent(locationValue);
+	});
+
   } else {
     statusMsg.textContent = "📍 Location not decided yet. Registration will open soon!";
     regForm.style.display = "none"; 
