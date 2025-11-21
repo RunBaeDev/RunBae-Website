@@ -470,7 +470,7 @@
     </div>
     <h2>CONGRATULATIONS!</h2>
     <p>You are our</p>
-    <div class="runner-number" id="runnerNumber">100</div>
+    <div class="runner-number" id="runnerNumber">0</div>
     <p>Runner!</p>
   </div>
   
@@ -485,6 +485,16 @@
       <p class="subtitle">Register for RunBae #1! – Flows into Sunday - Limited spots available</p>
 
       <form id="runForm">
+	  <h3 style="margin-top:10px; color:#fff; text-align:center; text-shadow:0 0 10px #ff4444;">
+		  TOC X RUNBAE
+		</h3>
+
+		<!-- Dummy Image block (you can replace the src later) -->
+		<div style="width:100%; margin: 12px 0; border-radius:12px; overflow:hidden;">
+		  <img src="./Images/PoasterRave.jpeg" 
+			   alt="Event Banner" 
+			   style="width:100%; display:block; border-radius:12px;">
+		</div>
         <!-- Full Name & Phone in same row -->
         <div class="form-row">
           <div class="field">
@@ -500,16 +510,23 @@
         <label>Which run are you signing up for? *</label>
         <select name="run" required>
           <option disabled selected value="">Select run distance</option>
-          <option>3km – Easy Flow 🌀</option>
-          <option>5km – Strong Pace 💪</option>
+          <option>3.6kms</option>
         </select>
 
-        <label>Have you attended any previous run? *</label>
+        <label>Is this your first Run Rave </label>
         <select name="attendance" required>
           <option disabled selected value="">Select attendance history</option>
           <option>Yes, I've been part of the vibe</option>
           <option>No, This will be my first run</option>
         </select>
+		
+		<!-- What are you coming for? -->
+		<label style="margin-top: 15px;">What are you coming for? *</label>
+		<select name="comingFor" required>
+		  <option disabled selected value="">Select an option</option>
+		  <option>Run</option>
+		  <option>Run + Rave</option>
+		</select>
 
         <div class="form-row">
           <div class="field">
@@ -657,7 +674,7 @@ data.append("location", eventLocation);
   
   try {
     // Send data to Google Sheets Web App
-	await fetch("https://script.google.com/macros/s/AKfycbxwP_m4TKAq9764Q4SY0HMtFtus3H7FFoaNb3DSAa-r3mAi_hHwuoA_DhiXf8gfBLUc/exec", {
+	await fetch("https://script.google.com/macros/s/AKfycbw4RH_vA7P_eVMQlAFGKRjFnrX4oScnf5iFEWs5iJRy_MxP0O044kNRjx7IJYN1WqQq/exec", {
       method: "POST",
       body: data,
     });
